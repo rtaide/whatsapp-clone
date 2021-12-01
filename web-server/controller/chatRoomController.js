@@ -72,14 +72,10 @@ exports.updateChatRoom = async (req, res) => {
   }
 };
 
-exports.saveRoomAndUpdateChatList = async (
-  //body: any,******************************************************////////////////////////////////******************************** */
-  //res: any,
-  //chatRoom: any,
-  //isNewChat: Boolean
-) => {
+const saveRoomAndUpdateChatList = (async(body, res, chatRoom, isNewChat)=>{
   try {
     await chatRoom.save();
+    console.log(chatRoom,"tttttttttt")
 
     // Update Room ID as mongodb row ID
     await ChatRoomModel.updateOne(
@@ -87,11 +83,37 @@ exports.saveRoomAndUpdateChatList = async (
       { $set: { roomId: chatRoom._id } }
     );
 
-    updateChatList(body, res, chatRoom, isNewChat);
+    updateChatList.updateChatList(body,res,chatRoom,isNewChat)
+    // updateChaupdateChatList(body, res, chatRoom, isNewChat);
   } catch (error) {
     return res.status(200).json({
       success: false,
       message: error.message,
     });
   }
-};
+
+})
+
+// exports.saveRoomAndUpdateChatList = 
+//   body: any,
+//   res: any,
+//   chatRoom: any,
+//   isNewChat: Boolean
+// ) 
+//   try {
+//     await chatRoom.save();
+
+//     // Update Room ID as mongodb row ID
+//     await ChatRoomModel.updateOne(
+//       { _id: chatRoom._id },
+//       { $set: { roomId: chatRoom._id } }
+//     );
+
+//     updateChatList(body, res, chatRoom, isNewChat);
+//   } catch (error) {
+//     return res.status(200).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };

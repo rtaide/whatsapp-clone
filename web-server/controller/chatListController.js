@@ -1,4 +1,4 @@
-//const { saveUserUnreadCount } = require ("./unreadCountController");
+const { saveUserUnreadCount } = require ("./unreadCountController");
 const { ChatListModel } = require ("../model/ChatListModel");
 const { ChatUnreadCountModel }  = require ("../model/ChatUnreadCountModel");
 
@@ -38,16 +38,17 @@ exports.getUserChatList = async (req, res) => {
 
     return res.status(200).json({ success: true, data: chats });
   } catch (err) {
+    console.log(err)
     return res.status(200).json({ success: false, message: err });
   }
 };
 
 // Update User Chat List=
 exports.updateChatList = async (
-  //body: any,
-  //res: any,
-  //chatRoom: any,
-  //isNewChat: Boolean
+  body,
+  res,
+  chatRoom,
+  isNewChat,
 ) => {
   console.log("Initial Chat =>", body);
   if (body.isNewChat) {
@@ -56,8 +57,8 @@ exports.updateChatList = async (
 
       // let count = await getUserUnreadCount(body);
       // body.chatUnreadCount = count;
-
-      await saveUserUnreadCount(body, isNewChat);
+      await saveUserUnreadCount.saveUserUnreadCount(body,isNewChat)
+      // await saveUserUnreadCount.saveUserUnreadCount(body, isNewChat);
       body.chatUnreadCount = 0;
 
       console.log("Final Chat Save =>", body);
@@ -77,6 +78,7 @@ exports.updateChatList = async (
         message: "ChatRoom created successfully",
       });
     } catch (error) {
+      conosle.log(error)
       return res.status(200).json({
         success: false,
         message: error.message,
@@ -86,8 +88,7 @@ exports.updateChatList = async (
     try {
       // let count = await getUserUnreadCount(body);
       // body.chatUnreadCount = count;
-
-      await saveUserUnreadCount(body, isNewChat);
+      await saveUserUnreadCount.saveUserUnreadCount(body,isNewChat)
       body.chatUnreadCount = 0;
 
       console.log("Final Chat Save =>", body);

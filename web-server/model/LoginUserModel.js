@@ -16,8 +16,13 @@ const loginUserSchema = new Schema(
   { timestamps: true }
 );
 
+
+const options = {
+  expiresIn: "1h",
+};
+
 loginUserSchema.methods.generateAuthToken = function (userId) {
-  return jwt.sign({ id: userId ? userId : this._id }, config.get("privateKey"));
+  return jwt.sign({ id: userId ? userId : this._id }, "mySecret", options);
 };
 
  const LoginUserModel = mongoose.model("loginUser", loginUserSchema);
