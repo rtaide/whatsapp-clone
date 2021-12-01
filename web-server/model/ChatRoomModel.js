@@ -15,7 +15,7 @@ const ChatBody = {
   chatMessage: { type: String, required: true },
   chatNumber: { type: String, required: false },
   chatImage: { type: String, required: false },
-  chatTime: { type: String, required: true },
+  chatTime: { type: Date, default : Date() },
   chatDelivery: { type: Number, required: false }, 
 };
 
@@ -28,7 +28,7 @@ const chatRoomSchema = new Schema(
   {
     roomId: { type: String, required: false },
     userId: { type: String, required: true },
-    chatId: { type: String, required: true }, 
+    chatId: { type: String, required: true ,  unique: true  }, 
     chat: { type: [ChatBody], required: false }
   },
   { timestamps: true }

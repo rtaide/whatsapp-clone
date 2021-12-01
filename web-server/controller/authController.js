@@ -43,6 +43,7 @@ exports.loginUser =  async function (req, res) {
       const token = loginUser.generateAuthToken(user.userId);
       console.log("AUTH_TOKEN = ", token);
       res.status(200).header("token", token).json({
+        token:token,
         success: true,
         id: user.userId,
         message: "Registered User",
@@ -61,10 +62,11 @@ exports.getLoggedInUserList =  async function(req, res) {
   try {
     const users = await LoginUserModel.find({});
     if (!users) {
+      console.log('something went wrong')
       return res.status(200).json({ success: false, message: "Api Failed" });
     }
     return res.status(200).json({ success: true, data: users });
   } catch (err) {
-    return res.status(200).json({ success: false, message: err });
+    return res.status(200).json({ success: false, message: {err: err, data : "something went wronf"}, });
   }
 }

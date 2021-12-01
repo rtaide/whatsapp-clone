@@ -24,7 +24,7 @@ app.use("/api/status", statusRouter);
 const port = process.env.PORT || 3000;
 
 mongoose
-  .connect("mongodb+srv://sachin:sachin123@cluster0.zexxw.mongodb.net/test", {
+  .connect("mongodb+srv://rachit:risertechub@cluster0.qjs8s.mongodb.net/test", {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
