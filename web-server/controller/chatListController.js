@@ -1,6 +1,6 @@
-const { saveUserUnreadCount } = require ("./unreadCountController");
-const { ChatListModel } = require ("../model/ChatListModel");
+const  ChatListModel  = require ("../model/ChatListModel");
 const { ChatUnreadCountModel }  = require ("../model/ChatUnreadCountModel");
+const { saveUserUnreadCount } = require("./unreadCountController");
 
 // Fetch Main User Chat List
 exports.getUserChatList = async (req, res) => { 
@@ -10,7 +10,7 @@ exports.getUserChatList = async (req, res) => {
     const chats = await ChatListModel.find({
       $or: [{ userId: id }, { chatId: id }],
     });
-    // console.log("getUserChatList => ", JSON.stringify(chats));
+    console.log("getUserChatList => ", JSON.stringify(chats));
     if (!chats) {
       return res.status(200).json({ success: false, message: "Api Failed" });
     }
@@ -50,35 +50,37 @@ exports.updateChatList = async (
   chatRoom,
   isNewChat,
 ) => {
-  console.log("Initial Chat =>", body);
-  if (body.isNewChat) {
+  if (isNewChat) {
     try {
       body.roomId = chatRoom._id;
 
       // let count = await getUserUnreadCount(body);
       // body.chatUnreadCount = count;
-      await saveUserUnreadCount.saveUserUnreadCount(body,isNewChat)
-      // await saveUserUnreadCount.saveUserUnreadCount(body, isNewChat);
+      await saveUserUnreadCount(body,isNewChat)
       body.chatUnreadCount = 0;
 
-      console.log("Final Chat Save =>", body);
+
+
+      
+
+      // let data = await ChatListModel.find({});
+      // console.log(data,"kkkkkkkkkkkkkkkkk")
+      console.log(body.roomId,"oooooooooooo")
 
       let result = await ChatListModel.updateOne(
         { roomId: body.roomId },
         body,
         { upsert: true }
       );
-      console.log("Final Chat Save RESULT =>", result);
+      console.log("Final Chat Save RESULT =>", result[0]);
 
-      // const chatList = new ChatListModel(body);
-      // await chatList.save();
       res.status(200).json({
         success: true,
         id: chatRoom._id,
         message: "ChatRoom created successfully",
       });
     } catch (error) {
-      conosle.log(error)
+      console.log(error)
       return res.status(200).json({
         success: false,
         message: error.message,
@@ -88,11 +90,12 @@ exports.updateChatList = async (
     try {
       // let count = await getUserUnreadCount(body);
       // body.chatUnreadCount = count;
-      await saveUserUnreadCount.saveUserUnreadCount(body,isNewChat)
+      await saveUserUnreadCount(body,isNewChat)
       body.chatUnreadCount = 0;
 
-      console.log("Final Chat Save =>", body);
-      let result = await ChatListModel.updateOne({ roomId: body.roomId }, body);
+      console.log("Final Chat Save =>", body.roomId);
+      console.log(body.roomId,"rrrrrrrrrrrrrrr")
+      let result = await ChatListModel.updateOne({ roomId : body.roomId }, body);
       console.log("Final Chat Save RESULT =>", result);
       return res.status(200).json({
         success: true,
