@@ -1,6 +1,6 @@
-const  ChatRoomModel  = require ("../model/ChatRoomModel");
-const  updateChatList  = require ("./chatListController");
-const  clearUserUnreadCount  = require ( "./unreadCountController"); 
+const ChatRoomModel = require("../model/ChatRoomModel");
+const updateChatList = require("./chatListController");
+const clearUserUnreadCount = require("./unreadCountController");
 
 // Fetch User Chat Room Details
 exports.getUserChatRoom = async (req, res) => {
@@ -47,19 +47,22 @@ exports.updateChatRoom = async (req, res) => {
       });
     }
 
-    console.log("updateChatRoom  => ", body);
-    ChatRoomModel.findOne({ _id: body.roomId }, async (err, chatRoom) => {
-      // console.log("CHAT ROOM => ", chatRoom);
+    console.log("updateChatRoom  => ", body.roomId);
+
+    await ChatRoomModel.find({ userId : body.userId }, async (err, chatRoom) => {
+      console.log("CHAT ROOM => ", chatRoom);
 
       if (err) {
+        console.log(err);
         return res.status(200).json({
           success: false,
           message: err.message,
         });
       }
 
+
       // Add new message received to Array
-      chatRoom.chat.push(body.chat);
+      chatRoom[0].chat.push(body.chat[0]);
 
       // Save Chat Room messages
       saveRoomAndUpdateChatList(body, res, chatRoom, false);
@@ -72,18 +75,25 @@ exports.updateChatRoom = async (req, res) => {
   }
 };
 
-const saveRoomAndUpdateChatList = (async(body, res, chatRoom, isNewChat)=>{
+const saveRoomAndUpdateChatList = async (body, res, chatRoom, isNewChat) => {
   try {
-    await chatRoom.save();
-    console.log(chatRoom,"tttttttttt")
+    if (isNewChat) {
+      await chatRoom.save();
+    } else {
+      // Update Room ID as mongodb row ID
+      await ChatRoomModel.updateOne(
+        { _id: chatRoom[0]._id },
+        { $set: { chat: chatRoom[0].chat } }
+      )
+        .then((data) => {
+          console.log("chat updated");
+        })
+        .catch((err) => {
+          console.log(err, "eeeeee");
+        });
+    }
 
-    // Update Room ID as mongodb row ID
-    await ChatRoomModel.updateOne(
-      { _id: chatRoom._id },
-      { $set: { roomId: chatRoom._id } }
-    );
-
-    updateChatList.updateChatList(body,res,chatRoom,isNewChat)
+    updateChatList.updateChatList(body, res, chatRoom, isNewChat);
     // updateChaupdateChatList(body, res, chatRoom, isNewChat);
   } catch (error) {
     return res.status(200).json({
@@ -91,29 +101,4 @@ const saveRoomAndUpdateChatList = (async(body, res, chatRoom, isNewChat)=>{
       message: error.message,
     });
   }
-
-})
-
-// exports.saveRoomAndUpdateChatList = 
-//   body: any,
-//   res: any,
-//   chatRoom: any,
-//   isNewChat: Boolean
-// ) 
-//   try {
-//     await chatRoom.save();
-
-//     // Update Room ID as mongodb row ID
-//     await ChatRoomModel.updateOne(
-//       { _id: chatRoom._id },
-//       { $set: { roomId: chatRoom._id } }
-//     );
-
-//     updateChatList(body, res, chatRoom, isNewChat);
-//   } catch (error) {
-//     return res.status(200).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
+};
