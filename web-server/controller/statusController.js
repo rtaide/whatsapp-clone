@@ -1,6 +1,5 @@
-const { StatusModel } = require ("../model/StatusModel");
+const  StatusModel  = require ("../model/StatusModel");
 const moment = require ("moment");
-const { StatusClassModel } = require ("../classModel/StatusClassModel");
 
 exports.getAllUserStatus= async (req, res) =>{
   let paramId = req.user.id;
@@ -29,8 +28,7 @@ exports.createUserStatus=  async (req, res) =>{
         message: "Invalid Data",
       });
     }
-
-    const statusModel = new StatusClassModel(body);
+    const statusModel = new StatusModel(body);
     console.log("STATUS Update  => ", JSON.stringify(statusModel));
     if (!statusModel) {
       return res.status(200).json({
