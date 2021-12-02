@@ -12,7 +12,7 @@ const chatListSchema = new Schema(
     roomId: { type: String, required: false },
     userId: { type: String, required: true },
     chatId: { type: String, required: true },
-    chatUnreadCount: { type: Number, required: false },
+    chatUnreadCount: { type: [ChatUnreadCount], required: false },
     chat: { type: [ChatBody], required: true }
   },
   { timestamps: true }
