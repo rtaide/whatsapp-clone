@@ -63,6 +63,7 @@ exports.updateChatRoom = async (req, res) => {
 
       // Add new message received to Array
       chatRoom[0].chat.push(body.chat[0]);
+      console.log(chatRoom[0].chat,"cccccccccccccccccccccccccccc")
 
       // Save Chat Room messages
       saveRoomAndUpdateChatList(body, res, chatRoom, false);
@@ -79,6 +80,10 @@ const saveRoomAndUpdateChatList = async (body, res, chatRoom, isNewChat) => {
   try {
     if (isNewChat) {
       await chatRoom.save();
+      await ChatRoomModel.updateOne(
+        { _id: chatRoom._id },
+        {$set : {roomId : chatRoom._id}}
+      )
     } else {
       // Update Room ID as mongodb row ID
       await ChatRoomModel.updateOne(

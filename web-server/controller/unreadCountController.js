@@ -1,14 +1,14 @@
-const { ChatUnreadCountModel } = require ("../model/ChatUnreadCountModel");
+const ChatUnreadCountModel  = require ("../model/ChatUnreadCountModel");
 
 //export async function saveUserUnreadCount(body, isNewChat) {
-  exports.saveUserUnreadCount = async (body, isNewChat)=> {
+  exports.saveUserUnreadCount = async (body,chatRoom, isNewChat)=> {
   // Update unread count details against Room Id
   try {
-    let listItem = (await ChatUnreadCountModel.findOne({
+    if(!isNewChat){
+    
+    let listItem = await ChatUnreadCountModel.findOne({
       roomId: body.roomId,
-    })) ;
-    console.log("saveUserUnreadCount => ", listItem);
-    if (listItem && listItem != null) {
+    }) ;
       if (body.chatUnreadCount.userId == listItem.chatId1) {
         // IF ID MATCHES THEN MAKE SELF CUNT 0 AND INCREMENT OTHER USER COUNT
         listItem.chatId1Count = 0;
@@ -16,7 +16,7 @@ const { ChatUnreadCountModel } = require ("../model/ChatUnreadCountModel");
         console.log(
           `User = ${body.chat.userName}, Room Id = ${body.roomId}, Unread Count = ${listItem}`
         );
-      } else if (body.chatUnreadCount.userId == listItem.chatId2) {
+      } else if (body.chatUnreadCount[0].userId == listItem.chatId2) {
         // IF ID MATCHES THEN MAKE SELF CUNT 0 AND INCREMENT OTHER USER COUNT
         listItem.chatId1Count = listItem.chatId1Count + 1;
         listItem.chatId2Count = 0;
@@ -33,7 +33,7 @@ const { ChatUnreadCountModel } = require ("../model/ChatUnreadCountModel");
           roomId: body.roomId,
           chatId1:
             listItem.chatId1 === ""
-              ? body.chatUnreadCount.userId
+              ? body.chatUnreadCount[0].userId
               : listItem.chatId1,
           chatId1Count: 0,
           chatId2: listItem.chatId2 === "" ? othetChatId : listItem.chatId2,
@@ -67,8 +67,9 @@ const { ChatUnreadCountModel } = require ("../model/ChatUnreadCountModel");
         }
       );
     }
+  
   } catch (error) {
-    console.log("saveUserUnreadCount ==> ", JSON.stringify(error));
+    console.log("saveUserUnreadCount ==> ", error);
     return 0;
   }
 }
