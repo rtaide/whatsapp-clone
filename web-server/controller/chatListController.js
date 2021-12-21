@@ -47,17 +47,12 @@ exports.getUserChatList = async (req, res) => {
       data: {chats} 
     });
   } catch (err) {
-<<<<<<< Updated upstream
     console.log(err);
-    return res.status(200).json({ success: false, message: err });
-=======
-    console.log(err)
     return res.status(401).json({
       code:"401",
       status:"Not Found", 
       data:{ err}
      });
->>>>>>> Stashed changes
   }
 };
 
@@ -90,16 +85,10 @@ exports.updateChatList = async (body, res, chatRoom, isNewChat) => {
         data:{id: chatRoom._id}
       });
     } catch (error) {
-<<<<<<< Updated upstream
-      console.log(error);
-      return res.status(200).json({
-        success: false,
-=======
       console.log(error)
       return res.status(400).json({
         code:"400",
         status:"Not Found",
->>>>>>> Stashed changes
         message: error.message,
         data:{}
       });
@@ -115,19 +104,12 @@ exports.updateChatList = async (body, res, chatRoom, isNewChat) => {
 
 
       console.log("Final Chat Save =>", body.roomId);
-<<<<<<< Updated upstream
-      let result = await ChatListModel.updateOne({ roomId: body.roomId }, body);
-      return res.status(200).json({
-        success: true,
-        id: chatRoom._id,
-=======
       console.log(body.roomId,"rrrrrrrrrrrrrrr")
       let result = await ChatListModel.updateOne({ roomId : body.roomId }, body);
       console.log("Final Chat Save RESULT =>", result);
       return res.status(201).json({
         code:"201",
         status:"OK",
->>>>>>> Stashed changes
         message: "ChatRoom updated successfully",
         data:{id: chatRoom._id},
       });

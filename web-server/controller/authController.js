@@ -1,8 +1,5 @@
 const LoginUserModel = require("../model/LoginUserModel");
-<<<<<<< Updated upstream
-=======
 const Profile = require("../model/profile");
->>>>>>> Stashed changes
 
 // User Login
 exports.loginUser = async function (req, res) {
@@ -18,12 +15,9 @@ exports.loginUser = async function (req, res) {
 
   const user = await LoginUserModel.findOne({
     $or: [{ userName: body.userName }, { phoneNumber: body.phoneNumber }],
-<<<<<<< Updated upstream
 
-  }));
-=======
-  });
->>>>>>> Stashed changes
+ // }));
+});
 
   try {
     const loginUser = new LoginUserModel(body);
@@ -60,27 +54,12 @@ exports.loginUser = async function (req, res) {
       // Return already registered users
       const token = loginUser.generateAuthToken(user.userId);
       console.log("AUTH_TOKEN = ", token);
-<<<<<<< Updated upstream
       res.status(200).header("token", token).json({
         token: token,
         success: true,
         id: user.userId,
         message: "Registered User",
       });
-=======
-      res
-        .status(201)
-        .header("token", token)
-        .json({
-          code: "201",
-          status: "Ok",
-          message: "Registered User",
-          data: {
-            token: token,
-            id: user.userId,
-          },
-        });
->>>>>>> Stashed changes
     }
   } catch (error) {
     return res.status(401).json({
@@ -154,7 +133,6 @@ exports.updateProfile = async (req, res) => {
       message: "successfully updated",
     });
   } catch (err) {
-<<<<<<< Updated upstream
     return res.status(200).json({ success: false, message: { err: err, data: "something went wronf" }, });
   }
 }
@@ -189,13 +167,11 @@ exports.searchUserByName = async function (req, res) {
 
   } catch (err) {
     return res.status(200).json({ success: false, message: { err: err, data: "something went wrong" } });
-=======
     return res.status(400).json({
       code: "400",
       status: "Not Found",
       data: { error },
     });
     //console.log("err in del acc");
->>>>>>> Stashed changes
   }
 };
