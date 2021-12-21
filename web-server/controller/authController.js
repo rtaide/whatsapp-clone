@@ -1,7 +1,7 @@
- const  LoginUserModel  = require("../model/LoginUserModel");
+const LoginUserModel = require("../model/LoginUserModel");
 
 // User Login
-exports.loginUser =  async function (req, res) {
+exports.loginUser = async function (req, res) {
   // Check if body is received or not
   const body = req.body;
   if (!body) {
@@ -13,7 +13,7 @@ exports.loginUser =  async function (req, res) {
 
   const user = (await LoginUserModel.findOne({
     $or: [{ userName: body.userName }, { phoneNumber: body.phoneNumber }],
-    
+
   }));
 
   try {
@@ -43,7 +43,7 @@ exports.loginUser =  async function (req, res) {
       const token = loginUser.generateAuthToken(user.userId);
       console.log("AUTH_TOKEN = ", token);
       res.status(200).header("token", token).json({
-        token:token,
+        token: token,
         success: true,
         id: user.userId,
         message: "Registered User",
@@ -58,7 +58,7 @@ exports.loginUser =  async function (req, res) {
 }
 
 // Fetch Main User List
-exports.getLoggedInUserList =  async function(req, res) {
+exports.getLoggedInUserList = async function (req, res) {
   try {
     const users = await LoginUserModel.find({});
     if (!users) {
@@ -67,6 +67,39 @@ exports.getLoggedInUserList =  async function(req, res) {
     }
     return res.status(200).json({ success: true, data: users });
   } catch (err) {
-    return res.status(200).json({ success: false, message: {err: err, data : "something went wronf"}, });
+    return res.status(200).json({ success: false, message: { err: err, data: "something went wronf" }, });
+  }
+}
+
+exports.searchUserByName = async function (req, res) {
+  try {
+    const username = req.body.username;
+
+    const userProfile = await LoginUserModel.findOne({ userName: username });
+    console.log(userProfile);
+
+    if (!userProfile) {
+
+      console.log("User Profile Not Found!");
+      
+      return res.status(404).json({
+        code: 404,
+        status: "NOT FOUND",
+        message: "User Not Found",
+        data: {}
+      });
+    }
+
+    res.status(200).json({
+      code: 200,
+      status: "OK",
+      message: "User Found",
+      data: {
+        userProfile
+      }
+    });
+
+  } catch (err) {
+    return res.status(200).json({ success: false, message: { err: err, data: "something went wrong" } });
   }
 }
