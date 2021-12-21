@@ -7,14 +7,17 @@ exports.getAllUserStatus= async (req, res) =>{
   try {
     const status = await StatusModel.find({});
     res.status(200).json({
-      success: true,
-      status: status,
+      code:"200",
+      status:"OK",
+      data:{status: status},
     });
   } catch (error) {
     1;
-    return res.status(200).json({
-      success: false,
+    return res.status(400).json({
+      code:"400",
+      status:"Not Found",
       message: error.message,
+      data:{}
     });
   }
 }
@@ -23,17 +26,21 @@ exports.createUserStatus=  async (req, res) =>{
   try {
     const body = req.body;
     if (!body) {
-      return res.status(200).json({
-        success: false,
+      return res.status(400).json({
+        code:"400",
+        status: "Not Found",
         message: "Invalid Data",
+        data:{}
       });
     }
     const statusModel = new StatusModel(body);
     console.log("STATUS Update  => ", JSON.stringify(statusModel));
     if (!statusModel) {
-      return res.status(200).json({
-        success: false,
+      return res.status(401).json({
+        code:"401",
+        status:"Not Found",
         message: "Invalid Data",
+        data:{}
       });
     }
 
@@ -65,13 +72,16 @@ exports.createUserStatus=  async (req, res) =>{
     );
     console.log("Status Server Response : ", insert);
     return res.status(200).json({
-      success: true,
+      code:"200",
+      status:"Ok",
       message: "Status created successfully",
+      data:{insert}
     });
   } catch (error) {
     console.log(error);
-    return res.status(200).json({
-      success: false,
+    return res.status(402).json({
+      code:"402",
+      status:"Not Found",
       message: error.message,
     });
   }
@@ -89,6 +99,7 @@ exports.setUserStatusViewed= async function (req, res) {
       if (statusItem.status[i]._id == body.statusId) {
         const row = statusItem.status[i].seenUsers.indexOf(body.loginId);
         console.log('INDEX ; ',row);
+        //console.log(body.loginId,"aaaaaa")
         if (row !== -1) {
           statusItem.status[i].seenUsers.splice(row, 1, body.loginId);
         } else {
@@ -117,14 +128,17 @@ exports.setUserStatusViewed= async function (req, res) {
       upsert: true,
     });
     res.status(200).json({
-      success: true,
+      code:"200",
+      status:"Ok",
       message: "Status updated successfully",
+      data:{}
     });
   } catch (error) {
     1;
-    return res.status(200).json({
-      success: false,
-      message: error.message,
+    return res.status(400).json({
+      code:"400",
+      status:"Not FOund",
+      message: error.message
     });
   }
 }

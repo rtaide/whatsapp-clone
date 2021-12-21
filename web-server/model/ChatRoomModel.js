@@ -29,7 +29,8 @@ const chatRoomSchema = new Schema(
     roomId: { type: String, required: false },
     userId: { type: String, required: true },
     chatId: { type: String, required: true  }, 
-    chat: { type: [ChatBody], required: false }
+    chat: { type: [ChatBody], required: false },
+    image: Array
   },
   { timestamps: true }
 );
