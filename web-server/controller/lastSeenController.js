@@ -1,4 +1,4 @@
-const { LastSeenModel } = require ("../model/LastSeenModel");
+const  LastSeenModel  = require ("../model/LastSeenModel");
 
 exports.saveUserLastSeen=  async function(body) {
     // Update last seen details against User Id

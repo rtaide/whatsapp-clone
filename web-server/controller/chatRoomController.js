@@ -1,6 +1,6 @@
 const ChatRoomModel = require("../model/ChatRoomModel");
 const updateChatList = require("./chatListController");
-const clearUserUnreadCount = require("./unreadCountController");
+const {clearUserUnreadCount }= require("./unreadCountController");
 
 // Fetch User Chat Room Details
 exports.getUserChatRoom = async (req, res) => {
@@ -16,6 +16,7 @@ exports.getUserChatRoom = async (req, res) => {
     }
     return res.status(200).json({ success: true, data: chats });
   } catch (err) {
+    console.log(err)
     return res.status(200).json({ success: false, message: err });
   }
 };
