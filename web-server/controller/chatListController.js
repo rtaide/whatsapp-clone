@@ -12,7 +12,12 @@ exports.getUserChatList = async (req, res) => {
     });
     console.log("getUserChatList => ", JSON.stringify(chats));
     if (!chats) {
-      return res.status(200).json({ success: false, message: "Api Failed" });
+      return res.status(400).json({ 
+        code:"400",
+        status:"Not Found",
+        message: "Api Failed",
+        data:{} 
+      });
     }
 
     for (let index = 0; index < chats.length; index++) {
@@ -36,10 +41,18 @@ exports.getUserChatList = async (req, res) => {
 
     // console.log("ChatUnreadCount RESPONSE => ", chats);
 
-    return res.status(200).json({ success: true, data: chats });
+    return res.status(200).json({ 
+      code:"200",
+      status:"OK", 
+      data: {chats} 
+    });
   } catch (err) {
     console.log(err);
-    return res.status(200).json({ success: false, message: err });
+    return res.status(401).json({
+      code:"401",
+      status:"Not Found", 
+      data:{ err}
+     });
   }
 };
 
@@ -66,15 +79,18 @@ exports.updateChatList = async (body, res, chatRoom, isNewChat) => {
       );
 
       res.status(200).json({
-        success: true,
-        id: chatRoom._id,
+        code:"200",
+        status:"OK",
         message: "ChatRoom created successfully",
+        data:{id: chatRoom._id}
       });
     } catch (error) {
-      console.log(error);
-      return res.status(200).json({
-        success: false,
+      console.log(error)
+      return res.status(400).json({
+        code:"400",
+        status:"Not Found",
         message: error.message,
+        data:{}
       });
     }
   } else {
@@ -88,16 +104,21 @@ exports.updateChatList = async (body, res, chatRoom, isNewChat) => {
 
 
       console.log("Final Chat Save =>", body.roomId);
-      let result = await ChatListModel.updateOne({ roomId: body.roomId }, body);
-      return res.status(200).json({
-        success: true,
-        id: chatRoom._id,
+      console.log(body.roomId,"rrrrrrrrrrrrrrr")
+      let result = await ChatListModel.updateOne({ roomId : body.roomId }, body);
+      console.log("Final Chat Save RESULT =>", result);
+      return res.status(201).json({
+        code:"201",
+        status:"OK",
         message: "ChatRoom updated successfully",
+        data:{id: chatRoom._id},
       });
     } catch (error) {
-      return res.status(200).json({
-        success: false,
+      return res.status(401).json({
+        code:"401",
+        status:"Not Found",
         message: error.message,
+        data:{}
       });
     }
   }

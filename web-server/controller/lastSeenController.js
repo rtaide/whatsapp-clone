@@ -17,13 +17,15 @@ exports.saveUserLastSeen=  async function(body) {
       console.log("USER LAST SEEN ==> ", lastSeen);
   
       res.status(200).json({
-        success: true,
-        lastSeen: lastSeen,
+        code:"200",
+        status:"OK",
+        data:{lastSeen: lastSeen},
       });
     } catch (error) {
       1;
-      return res.status(200).json({
-        success: false,
+      return res.status(400).json({
+        code:"400",
+        status:"Not Found" ,
         message: error.message,
       });
     }
