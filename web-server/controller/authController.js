@@ -1,5 +1,6 @@
 const LoginUserModel = require("../model/LoginUserModel");
 const Profile = require("../model/profile");
+const QRCode = require("qrcode");
 
 // User Login
 exports.loginUser = async function (req, res) {
@@ -31,10 +32,15 @@ exports.loginUser = async function (req, res) {
         { userName: body.userName },
         { $set: { userId: loginUser._id } }
       );
+
+      const qrCodeForUser = await QRCode.toDataURL(String(body.phoneNumber));
+      console.log(qrCodeForUser);
+
       const profile = new Profile({
         name: body.userName,
         phone: body.phoneNumber,
         user: loginUser._id,
+        qrCodeUrl: qrCodeForUser
       });
       profile.save();
       const token = loginUser.generateAuthToken();
